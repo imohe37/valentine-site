@@ -1,6 +1,8 @@
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 const question = document.getElementById("question");
+// Make sure your card has this ID in the HTML
+const card = document.querySelector(".card"); 
 
 const sadSound = document.getElementById("sadSound");
 const cheerSound = document.getElementById("cheerSound");
@@ -16,54 +18,57 @@ const questions = [
   "You know you want to 💖"
 ];
 
-// Mobile-safe NO button movement
 noBtn.addEventListener("click", () => {
   sadSound.currentTime = 0;
   sadSound.play();
 
-  // Viewport width & height
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
+  // 1. Get Card dimensions
+  const rect = card.getBoundingClientRect();
+  
+  // 2. Calculate max positions (Card width - Button width)
+  const maxX = rect.width - noBtn.offsetWidth;
+  const maxY = rect.height - noBtn.offsetHeight;
 
-  // Button dimensions
-  const btnWidth = noBtn.offsetWidth;
-  const btnHeight = noBtn.offsetHeight;
+  // 3. Generate random coordinates within the card
+  const x = Math.floor(Math.random() * maxX);
+  const y = Math.floor(Math.random() * maxY);
 
-  // Random position inside viewport with margin
-  const x = Math.random() * (vw - btnWidth - 20) + 10;
-  const y = Math.random() * (vh - btnHeight - 20) + 10;
-
-  noBtn.style.position = "fixed";
+  // 4. Apply styles
+  // Ensure the .card in CSS has 'position: relative'
+  noBtn.style.position = "absolute"; 
   noBtn.style.left = `${x}px`;
   noBtn.style.top = `${y}px`;
   noBtn.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
 
-  // Grow YES button incrementally
-  yesScale += 0.25;
+  // 5. Grow YES button
+  yesScale += 0.3; // Increased growth rate slightly
   yesBtn.style.transform = `scale(${yesScale})`;
-  yesBtn.style.transformOrigin = "center";
+  // Important: ensures the Yes button grows from its center
+  yesBtn.style.transformOrigin = "center"; 
 
-  // Change question text
+  // 6. Update text
   qIndex = (qIndex + 1) % questions.length;
   question.textContent = questions[qIndex];
 });
 
-// YES click
 yesBtn.addEventListener("click", () => {
   cheerSound.currentTime = 0;
   cheerSound.play();
   setTimeout(() => {
     window.location.href = "yay.html";
-  }, 400); // wait a moment for sound to play
+  }, 400);
 });
 
-// Floating hearts
+// Floating hearts (optimized)
 setInterval(() => {
   const heart = document.createElement("span");
+  heart.className = "floating-heart"; // Better to use a class for styling
   heart.textContent = "💖";
   heart.style.left = Math.random() * 100 + "vw";
+  heart.style.position = "fixed";
+  heart.style.bottom = "-20px";
   heart.style.fontSize = Math.random() * 10 + 16 + "px";
-  document.getElementById("hearts").appendChild(heart);
+  document.body.appendChild(heart);
 
   setTimeout(() => heart.remove(), 5000);
 }, 600);
