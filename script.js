@@ -16,30 +16,13 @@ const questions = [
   "You know you want to 💖"
 ];
 
-// Mobile-safe NO button movement
+// NO button — now static, but still responds by playing sadSound and growing YES
 noBtn.addEventListener("click", () => {
   sadSound.currentTime = 0;
   sadSound.play();
 
-  // Viewport width & height
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-
-  // Button dimensions
-  const btnWidth = noBtn.offsetWidth;
-  const btnHeight = noBtn.offsetHeight;
-
-  // Random position inside viewport with margin
-  const x = Math.random() * (vw - btnWidth - 20) + 10;
-  const y = Math.random() * (vh - btnHeight - 20) + 10;
-
-  noBtn.style.position = "fixed";
-  noBtn.style.left = `${x}px`;
-  noBtn.style.top = `${y}px`;
-  noBtn.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
-
-  // Grow YES button incrementally
-  yesScale += 0.25;
+  // Double YES button size each time NO is clicked
+  yesScale *= 2;
   yesBtn.style.transform = `scale(${yesScale})`;
   yesBtn.style.transformOrigin = "center";
 
