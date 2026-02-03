@@ -22,12 +22,9 @@ body {
   backdrop-filter: blur(14px);
   border-radius: 28px;
   box-shadow: 0 25px 60px rgba(0,0,0,0.35);
-  overflow: hidden;
+  overflow: hidden; /* Keeps button from popping outside rounded corners */
   animation: fadeUp 1s ease;
-}
-
-.card.yay {
-  animation: popIn 0.9s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .card-video {
@@ -37,8 +34,13 @@ body {
 }
 
 .content {
-  padding: 20px;
+  padding: 24px;
   text-align: center;
+  position: relative; /* CRITICAL: Acts as the boundary for the No button */
+  min-height: 250px;  /* Gives the No button space to jump around */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .love-text {
@@ -51,17 +53,16 @@ body {
 h2 {
   font-size: 1.35rem;
   margin-bottom: 18px;
-}
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 10px;
+  min-height: 3.5rem; /* Prevents layout jump when text changes */
 }
 
 .buttons {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 14px;
+  width: 100%;
+  height: 100px; /* Reference area for button movement */
   position: relative;
 }
 
@@ -70,48 +71,41 @@ button {
   border-radius: 999px;
   padding: 12px 22px;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.25s ease;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 #yesBtn {
   background: linear-gradient(135deg, #ff4d8d, #ff85b3);
   color: white;
-  box-shadow: 0 0 25px rgba(255,77,141,0.6);
-  animation: pulse 1.4s infinite;
+  box-shadow: 0 8px 20px rgba(255,77,141,0.4);
+  z-index: 10; /* Keeps Yes button on top of No button */
+  white-space: nowrap;
 }
 
 #noBtn {
   background: rgba(255,255,255,0.9);
   color: #333;
-  position: relative;
+  position: absolute; /* Changed from relative to absolute for JS control */
+  white-space: nowrap;
+  transition: left 0.2s ease, top 0.2s ease, transform 0.2s ease;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-  100% { transform: scale(1); }
-}
-
+/* Animations */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes popIn {
-  0% { transform: scale(0.7); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* Floating hearts */
 #hearts span {
   position: fixed;
   bottom: -20px;
-  font-size: 18px;
-  animation: floatUp 5s linear infinite;
+  pointer-events: none;
+  animation: floatUp 5s linear forwards;
 }
 
 @keyframes floatUp {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-110vh); opacity: 0; }
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
 }
